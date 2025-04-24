@@ -17,13 +17,13 @@ const signToken = (id) => {
 const sendTokenAndRes = (user, statusCode, res) => {
   const token = signToken(user._id);
 
-  // const cookieOptions = {
-  //   expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-  //   httpOnly: true,
-  //   secure: false,
-  //   // sameSite: "None",
-  // };
-  // res.cookie("jwt", token, cookieOptions);
+  const cookieOptions = {
+    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    secure: true,
+    // sameSite: "None",
+  };
+  res.cookie("jwt", token, cookieOptions);
 
   user.password = undefined;
 
