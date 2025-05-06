@@ -39,6 +39,11 @@ exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);
 
+    if (req.file) {
+      doc.thumbnail = req.file.filename;
+      await doc.save();
+    }
+
     res.status(201).json({
       status: "success",
       data: { doc },

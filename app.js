@@ -13,16 +13,17 @@ app.use(express.json());
 // implement CORS
 app.use(cors());
 
+app.use("/image", express.static("image"));
+
 app.use("/api/v1/blog", blogRouter);
 app.use("/api/v1/comment", commentRouter);
 app.use("/api/v1/user", userRouter);
 
 const port = process.env.PORT || 8000;
-// const DB_URL = "mongodb://localhost:27017/blog";
-const DB_URL = process.env.DATABASE.replace(
-  "<db_password>",
-  process.env.DB_PASSWORD
-);
+const LOCAL_DB_URL = "mongodb://localhost:27017/blog";
+const DB_URL =
+  process.env.DATABASE?.replace("<db_password>", process.env.DB_PASSWORD) ||
+  LOCAL_DB_URL;
 
 mongoose
   .connect(DB_URL)

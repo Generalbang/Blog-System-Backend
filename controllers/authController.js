@@ -100,6 +100,14 @@ exports.login = catchAsync(async (req, res, next) => {
   sendTokenAndRes(user, 200, res);
 });
 
+const filterObj = (obj, ...allowedFields)=>{
+  const newObj ={}
+  Object.keys(obj).forEach(el => {
+    if(allowedFields.includes(el)) newObj[el] = obj[el]
+  })
+  return newObj
+}
+
 exports.userInfoUpdate = catchAsync(async (req, res, next) => {
   // check if password is mistakingly passed
   if (req.body.password || req.body.passwordConfirm) {
@@ -108,13 +116,19 @@ exports.userInfoUpdate = catchAsync(async (req, res, next) => {
     );
   }
 
+  const filteredBody = filterObj(req.body, 'name','email')
+  if (req.file) filteredBody.photo = req.file.filename
+  
+    // {
+    //   name: req.body.name,
+    //   email: req.body.email,
+    //   username: req.body.username,
+    //   photo: req.file.filename,
+    // }
+
   const user = await User.findByIdAndUpdate(
     req.user.id,
-    {
-      name: req.body.name,
-      email: req.body.email,
-      username: req.body.username,
-    },
+    filteredBody,
     {
       new: true,
       runValidators: true,
